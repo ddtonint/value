@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">Value</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container-fluid">
+            <h1 class="display-3">Bring True Value to DeFi</h1>
+            <p><a class="btn btn-info btn-lg" href="https://valuedefi.medium.com/" role="button">Learn more &raquo;</a></p>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                
+                <canvas id="gv-total-holders" data-url="{% url 'govvault:gv-total-holders' %}"></canvas>
+                
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+                <script>
+                
+                    $(function () {
+                
+                        var $gvTotalHoldersChart = $("#gv-total-holders");
+                        $.ajax({
+                            url: $gvTotalHoldersChart.data("url"),
+                            success: function (json_data) {
+                    
+                            var ctx = $gvTotalHoldersChart[0].getContext("2d");
+                    
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: json_data.labels,
+                                    datasets: [{
+                                        label: 'Total Wallets',
+                                        data: json_data.gv_total_wallets_data,
+                                        fill: false
+                                    }, {
+                                        label: 'Active Wallets',
+                                        data: json_data.active_wallets_data,
+                                        type: 'bar'
+                                    }, {
+                                        label: 'New',
+                                        data: json_data.new_wallets_data,
+                                        type: 'bar'
+                                    }, {
+                                        label: 'Left',
+                                        data: json_data.left_wallets_data,
+                                        type: 'bar'
+                                    }]   
+                                },
+                                options: {
+                                    responsive: true,
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Wallets in Gov Vault'
+                                    },
+                                    plugins:  {
+                                        colorschemes: {
+                                            scheme: 'brewer.Paired12'
+                                        }
+                                    }
+                                }
+                            });
+                            }
+                        });
+                
+                    });
+                
+                </script>
+            </div>
+
+            <div class="col-md-6">
+                
+                <canvas id="value-flow" data-url="{% url 'govvault:value-flow' %}"></canvas>
+                
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+                <script>
+                
+                    $(function () {
+                
+                        var $valueFlowChart = $("#value-flow");
+                        $.ajax({
+                            url: $valueFlowChart.data("url"),
+                            success: function (json_data) {
+                    
+                            var ctx = $valueFlowChart[0].getContext("2d");
+                    
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: json_data.labels,
+                                    datasets: [{
+                                        label: 'Total locked',
+                                        data: json_data.locked_value_data,
+                                        fill: false
+                                    }, {
+                                        label: 'Net',
+                                        data: json_data.diff_value_data,
+                                        type: 'bar'
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Value Flow'
+                                    },
+                                    plugins:  {
+                                        colorschemes: {
+                                            scheme: 'brewer.DarkTwo8'
+                                        }
+                                    }
+                                }
+                            });
+                            }
+                        });
+                
+                    });
+                
+                </script>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                
+                <canvas id="vaults-performance" data-url="{% url 'govvault:vaults-performance' %}"></canvas>
+                
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+                <script>
+                
+                    $(function () {
+                
+                        var $vaultsPerformanceChart = $("#vaults-performance");
+                        $.ajax({
+                            url: $vaultsPerformanceChart.data("url"),
+                            success: function (json_data) {
+                    
+                            var ctx = $vaultsPerformanceChart[0].getContext("2d");
+                    
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: json_data.labels,
+                                    datasets: [{
+                                        label: 'Gov Vault',
+                                        data: json_data.gv_price_per_share_data,
+                                        fill: false
+                                    }]   
+                                },
+                                options: {
+                                    responsive: true,
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Vaults Performance'
+                                    },
+                                    plugins:  {
+                                        colorschemes: {
+                                            scheme: 'brewer.Spectral11'
+                                        }
+                                    },
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                suggestedMin: 0.8,
+                                                suggestedMax: 1.2
+                                            }
+                                        }]
+                                    }
+                                }
+                            });
+                            }
+                        });
+                
+                    });
+                
+                </script>
+            </div>
+
+            <div class="col-md-6">
+                
+                <canvas id="top-gvholders" data-url="{% url 'govvault:top-gvholders' %}"></canvas>
+                
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+                <script>
+                
+                    $(function () {
+                
+                        var $gvTopHoldersChart = $("#top-gvholders");
+                        $.ajax({
+                            url: $gvTopHoldersChart.data("url"),
+                            success: function (json_data) {
+                    
+                            var ctx = $gvTopHoldersChart[0].getContext("2d");
+                    
+                            new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: json_data.labels,
+                                    datasets: [{
+                                        label: 'gvValue',
+                                        data: json_data.top_gvholders_data,
+                                        fill: false
+                                    }]   
+                                },
+                                options: {
+                                    responsive: true,
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Gov Vault Top Holders'
+                                    },
+                                    plugins:  {
+                                        colorschemes: {
+                                            scheme: 'brewer.SetThree12'
+                                        }
+                                    }
+                                }
+                            });
+                            }
+                        });
+                
+                    });
+                
+                </script>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                
+                <canvas id="seedpool-holders" data-url="{% url 'govvault:seedpool-holders' %}"></canvas>
+                
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+                <script>
+                
+                    $(function () {
+                
+                        var $seedPoolHoldersChart = $("#seedpool-holders");
+                        $.ajax({
+                            url: $seedPoolHoldersChart.data("url"),
+                            success: function (json_data) {
+                    
+                            var ctx = $seedPoolHoldersChart[0].getContext("2d");
+                    
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: json_data.labels,
+                                    datasets: [{
+                                        label: 'Total balance',
+                                        data: json_data.seedpool_holders_data,
+                                        fill: false
+                                    }]   
+                                },
+                                options: {
+                                    responsive: true,
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: json_data.chart_title
+                                    },
+                                    plugins:  {
+                                        colorschemes: {
+                                            scheme: 'brewer.Spectral11'
+                                        }
+                                    },
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                suggestedMin: 0.8,
+                                                suggestedMax: 1.2
+                                            }
+                                        }]
+                                    }
+                                }
+                            });
+                            }
+                        });
+                
+                    });
+                
+                </script>
+            </div>
+
+        </div>
+
+        <hr>
+
+    </div> <!-- /container -->
+
+</main>
+
+{% endblock %}
